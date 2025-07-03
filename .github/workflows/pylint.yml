@@ -24,13 +24,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
+        - name : Install dependencies
+      run : |
         python -m pip install --upgrade pip
-        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        if [ -f requirements-dev.txt ] ; then pip install -r requirements-dev.txt; fi
         pip install pylint
 
-    - name: Analyze code with Pylint
-      run: |
+
+    - - name: Analyze code with Pylint
+      run: 
         # It's good practice to have a .pylintrc file in your repo for configuration
         pylint $(git ls-files '*.py')
