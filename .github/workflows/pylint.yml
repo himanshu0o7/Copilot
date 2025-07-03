@@ -1,23 +1,36 @@
+# .github/workflows/pylint.yml
+
 name: Pylint
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
+        # Assumes you have a requirements-dev.txt file
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+
+    - name: Analyze code with Pylint
       run: |
+        # It's good practice to have a .pylintrc file in your repo for configuration
         pylint $(git ls-files '*.py')
