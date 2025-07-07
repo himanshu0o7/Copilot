@@ -1,0 +1,17 @@
+name: CryptoFuturesBot
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pandas
+  - numpy
+  - streamlit
+  - requests
+  - cryptography
+  - pytest
+  - pip
+  - pip:
+      - python-dotenv
+      - telegram
+      
