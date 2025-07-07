@@ -1,4 +1,7 @@
 import sys
+import yfinance as yf
+import pandas as pd
+import streamlit as st
 from pathlib import Path
 from datetime import datetime
 

@@ -1,14 +1,28 @@
 import pandas as pd
 import pandas_ta as ta
-
+import numpy as np
 
 def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
-    """Compute basic technical indicators and return new DataFrame."""
-    df = df.copy()
-    df['SMA_20'] = df['Close'].rolling(20).mean()
-    df['EMA_20'] = df['Close'].ewm(span=20, adjust=False).mean()
-    df['RSI_14'] = ta.rsi(df['Close'], length=14)
-    macd = ta.macd(df['Close'])
-    df['MACD'] = macd['MACD_12_26_9']
-    df['MACD_signal'] = macd['MACDs_12_26_9']
+    """Adds technical indicators to the stock data DataFrame."""
+
+    # If the DataFrame has a MultiIndex, flatten it.
+    if isinstance(df.index, pd.MultiIndex):
+        df = df.reset_index()
+
+    # Add technical indicators
+    df.ta.ema(length=20, append=True)
+    df.ta.rsi(length=14, append=True)
+
+    # Calculate MACD and check if the result is valid
+    macd = df.ta.macd(append=False)
+    if macd is not None and not macd.empty:
+        # If valid, assign the specific columns
+        df['MACD'] = macd['MACD_12_26_9']
+        df['MACD_signal'] = macd['MACDs_12_26_9']
+    else:
+        # If not valid (e.g., due to insufficient data), fill with NaN
+        df['MACD'] = np.nan
+        df['MACD_signal'] = np.nan
+
+    df.dropna(inplace=True)
     return df

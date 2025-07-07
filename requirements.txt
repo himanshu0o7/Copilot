@@ -1,8 +1,9 @@
 pandas
-numpy
+numpy==1.26.4
 yfinance
-pandas_ta
+pandas-ta==0.3.14b0
 matplotlib
 scikit-learn
 plotly
 streamlit
+setuptools<81

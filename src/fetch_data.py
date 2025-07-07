@@ -19,9 +19,18 @@ def fetch_stock_data(symbol: str, start: str, end: str) -> pd.DataFrame:
     -------
     pandas.DataFrame
         Historical OHLCV data indexed by date.
+
+    Raises
+    ------
+    ValueError
+        If no data is returned for the given symbol and date range.
     """
-    ticker = yf.Ticker(symbol)
-    data = ticker.history(start=start, end=end)
-    if not isinstance(data, pd.DataFrame):
-        raise ValueError("No data returned for symbol %s" % symbol)
+    data = yf.download(symbol, start=start, end=end, progress=False)
+
+    if data.empty:
+        raise ValueError(
+            f"No data returned for symbol '{symbol}' "
+            f"from {start} to {end}."
+        )
+
     return data
